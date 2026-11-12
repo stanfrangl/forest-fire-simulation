@@ -18,10 +18,30 @@ unsigned int SCREEN_HEIGHT = CELL_MAP_HEIGHT * CELL_SIZE;
 void DrawCell(unsigned int x, unsigned int y, unsigned int colour);
 
 int main(int argc, int *argv[]) {
-    //SDL Boilerplate
+    // SDL Boilerplate
     SDL_INIT(SDL_INIT_VIDEO);
     window = SDL_CreateWindow("Basic Forest Simulation", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
+    surface = SDL_GetWindowSurface(window);
+    // SDL Event Handler
+    SDL_Event e;
+
+    // Rendering Loop
+    bool quit = false;
+    while (!quit) {
+        while (SDL_PollEvent(&e) != 0) 
+            if (e.type == SDL_QUIT) quit == true;
+        SDL_DELAY(1000);
+        // Update frame buffer
+        SDL_UpdateSurfaceWindow(window);
+    }
+
+    // Clean up SDL
+    SDL_DestroyWindow(window);
+    // Quit
+    SDL_Quit();
+
+    return 0;
 }
 
 void DrawCell(unsigned int x, unsigned int y, unsigned int colour) {
