@@ -11,16 +11,21 @@ public:
             640, 640, 
             SDL_WINDOW_RESIZABLE | SDL_WINDOW_MINIMIZED);
         checkSDLError("Creating window");
+    }
+    
+    void render() {
         // get the details of the window's pixel format
         const SDL_PixelFormatDetails* FmtDetails =
-            SDL_GetPixelFormatDetails(GetSurface()->format);
+        SDL_GetPixelFormatDetails(GetSurface()->format);
         checkSDLError("Getting pixel format details");
         
         // create the background colour of the window suitable for the surface
         SDL_FillSurfaceRect(GetSurface(), nullptr, 
-        SDL_MapRGB(FmtDetails, nullptr, 120, 120, 100));
+        SDL_MapRGB(FmtDetails, nullptr, 0, 0, 0));
         checkSDLError("Filling background colour");
-        
+    }
+    
+    void update() {
         SDL_UpdateWindowSurface(SDLWindow);
         checkSDLError("Updating window durface");
     }

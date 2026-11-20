@@ -1,12 +1,28 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <vector>
 #include "Window.h"
+#include "tile.h"
 
 int main(int, char**) {
   // initialisation
   SDL_Init(SDL_INIT_VIDEO);
   Window GameWindow;
-
+  const auto* fmt = SDL_GetPixelFormatDetails(GameWindow.GetSurface()->format);
+  //building the grid
+  constexpr int Columns = 16;
+  constexpr int Rows = 16;
+  constexpr int Cell = 40;
+  std::vector<Tile> Tiles;
+  Tiles.reserve(Rows * Columns);
+  for (int Row = 0; Row < Rows; ++Row) {
+    for (int col = 0; col < Columns; ++col) {
+      Tiles.emplace_back(
+        SDL_Rect{col * Cell, Row * Cell, Cell, Cell},
+        fmt
+      );
+    }
+  }
   // Application loop
   SDL_Event event;
   bool IsRunning = true;
@@ -17,7 +33,14 @@ int main(int, char**) {
       if (event.type == SDL_EVENT_QUIT) IsRunning = false;
     }
     // Update objects
-    // Display changes
+    // Render background
+    GameWindow.render();
+    // Render everything else
+    for (const auto& MyTile : Tiles) {
+      MyTile.Render(GameWindow.GetSurface());
+    }
+    // Swap buffer
+    GameWindow.update();
   }
 
   // shutdown
