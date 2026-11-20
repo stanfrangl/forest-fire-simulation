@@ -1,6 +1,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <vector>
+#include <random>
 #include "Window.h"
 #include "tile.h"
 
@@ -10,9 +11,9 @@ int main(int, char**) {
   Window GameWindow;
   const auto* fmt = SDL_GetPixelFormatDetails(GameWindow.GetSurface()->format);
   //building the grid
-  constexpr int Columns = 16;
-  constexpr int Rows = 16;
-  constexpr int Cell = 40;
+  constexpr int Columns = 64;
+  constexpr int Rows = 64;
+  constexpr int Cell = 16;
   std::vector<tile> Tiles;
   Tiles.reserve(Rows * Columns);
   for (int Row = 0; Row < Rows; ++Row) {
@@ -23,11 +24,14 @@ int main(int, char**) {
       );
     }
   }
-  Tiles[0].SetType(Type::bare);
-  Tiles[1].SetType(Type::growing);
-  Tiles[2].SetType(Type::mature);
-  Tiles[2].SetStatus(Status::burning);
-  Tiles[3].SetType(Type::ash);
+  std::mt19937 rng{std::random_device{}()};
+  std::uniform_int_distribution<int> distribution{1, 100};
+  for (int i = 0; i < Tiles.size(); i++) {
+    int result = distribution(rng);
+    if (result <= 10) Tiles[i].SetType(Type::bare);
+    else if (result <= 30) Tiles[i].SetType(Type::growing);
+    else Tiles[i].SetType(Type::mature);
+  }
   // Application loop
   SDL_Event event;
   bool IsRunning = true;
@@ -38,6 +42,15 @@ int main(int, char**) {
       if (event.type == SDL_EVENT_QUIT) IsRunning = false;
     }
     // Update objects
+    const int rowOffSets[] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    const int colOffSets[] = {-1, 0, 1, -1, 1, -1, 0, 1};
+    for (int i = 0; i < Tiles.size(); i++) {
+      int row = i / Columns;
+      int col = i % Columns;
+    }
+    for (auto& MyTile : Tiles) {
+      MyTile.Update(rng);
+    }
     // Render background
     GameWindow.render();
     // Render everything else
@@ -46,6 +59,7 @@ int main(int, char**) {
     }
     // Swap buffer
     GameWindow.update();
+    SDL_Delay(100);
   }
 
   // shutdown

@@ -8,7 +8,7 @@ public:
     Window() {
         SDLWindow = SDL_CreateWindow(
             "Hello Window",
-            640, 640, 
+            1024, 1024, 
             SDL_WINDOW_RESIZABLE | SDL_WINDOW_MINIMIZED);
         checkSDLError("Creating window");
     }
