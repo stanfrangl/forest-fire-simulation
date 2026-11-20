@@ -13,7 +13,7 @@ int main(int, char**) {
   constexpr int Columns = 16;
   constexpr int Rows = 16;
   constexpr int Cell = 40;
-  std::vector<Tile> Tiles;
+  std::vector<tile> Tiles;
   Tiles.reserve(Rows * Columns);
   for (int Row = 0; Row < Rows; ++Row) {
     for (int col = 0; col < Columns; ++col) {
@@ -23,6 +23,11 @@ int main(int, char**) {
       );
     }
   }
+  Tiles[0].SetType(Type::bare);
+  Tiles[1].SetType(Type::growing);
+  Tiles[2].SetType(Type::mature);
+  Tiles[2].SetStatus(Status::burning);
+  Tiles[3].SetType(Type::ash);
   // Application loop
   SDL_Event event;
   bool IsRunning = true;
